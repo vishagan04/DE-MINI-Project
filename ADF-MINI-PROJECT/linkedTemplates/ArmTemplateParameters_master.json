@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADF-MINI-PROJECT"
+		},
+		"LS_sql_password": {
+			"value": ""
+		},
+		"MongoDbAtlas1_connectionString": {
+			"value": ""
+		},
+		"LS_sql_properties_typeProperties_server": {
+			"value": "ss-client-order.database.windows.net"
+		},
+		"LS_sql_properties_typeProperties_database": {
+			"value": "DB-mini"
+		},
+		"LS_sql_properties_typeProperties_userName": {
+			"value": "vishagan"
+		},
+		"MongoDbAtlas1_properties_typeProperties_database": {
+			"value": "test"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
