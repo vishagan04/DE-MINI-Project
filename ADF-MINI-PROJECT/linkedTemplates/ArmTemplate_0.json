@@ -114,27 +114,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Reporting",
-					"table": "Transaction_user_2"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DB_Prep_Joined_Transaction_User')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -219,6 +198,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_trans_User_2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Transaction_user_2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DB_transaction')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -285,6 +285,7 @@
 							},
 							"sink": {
 								"type": "AzureSqlSink",
+								"preCopyScript": "drop table if exists [RAW].[transactions_details]",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false,
 								"tableOption": "autoCreate",
@@ -404,6 +405,7 @@
 							},
 							"sink": {
 								"type": "AzureSqlSink",
+								"preCopyScript": "drop table if exists [RAW].[user_details]",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false,
 								"tableOption": "autoCreate",
@@ -487,7 +489,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "AzureSqlTable1",
+								"referenceName": "DB_Reporting_trans_User_2",
 								"type": "DatasetReference"
 							},
 							"name": "sink1"
@@ -523,6 +525,7 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
+						"     preSQLs:['drop table if exists [Reporting].[Transaction_user_2]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -531,7 +534,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DB_Reporting_Trans_User_1')]",
-				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]"
+				"[concat(variables('factoryId'), '/datasets/DB_Reporting_trans_User_2')]"
 			]
 		},
 		{
@@ -597,6 +600,7 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
+						"     preSQLs:['drop table if exists [Reporting].[Trans_User]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -664,6 +668,7 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
+						"     preSQLs:['drop table if exists [Prep].[transaction]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -717,7 +722,9 @@
 						"     insertable:true,",
 						"     updateable:false,",
 						"     upsertable:false,",
+						"     recreate:true,",
 						"     format: 'table',",
+						"     preSQLs:['drop table if exists [Prep].[user_details]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -837,6 +844,7 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
+						"     preSQLs:['drop table if exists [Prep].[Transaction_user_details]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
