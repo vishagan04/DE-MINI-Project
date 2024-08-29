@@ -1,6 +1,9 @@
 {
 	"name": "DF_clean_user",
 	"properties": {
+		"folder": {
+			"name": "Task-1"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
@@ -40,7 +43,6 @@
 				"     upsertable:false,",
 				"     recreate:true,",
 				"     format: 'table',",
-				"     preSQLs:['drop table if exists [Prep].[user_details]'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"

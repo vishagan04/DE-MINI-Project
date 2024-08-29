@@ -5,6 +5,9 @@
 			"referenceName": "MongoDbAtlas1",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Task-1"
+		},
 		"annotations": [],
 		"type": "MongoDbAtlasCollection",
 		"schema": [],

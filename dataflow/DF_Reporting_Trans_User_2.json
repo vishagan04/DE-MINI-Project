@@ -1,6 +1,9 @@
 {
 	"name": "DF_Reporting_Trans_User_2",
 	"properties": {
+		"folder": {
+			"name": "Task-1"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
@@ -51,7 +54,6 @@
 				"     upsertable:false,",
 				"     recreate:true,",
 				"     format: 'table',",
-				"     preSQLs:['drop table if exists [Reporting].[Transaction_user_2]'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
