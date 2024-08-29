@@ -1,0 +1,80 @@
+{
+	"name": "Blob_to_DB_Scraped_data",
+	"properties": {
+		"folder": {
+			"name": "Task-2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Blob_Scraped_data",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DB_scraped_data",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          departmentCode as string,",
+				"          departmentName as string,",
+				"          discontinuedProductFlag1 as string,",
+				"          categoryCode as string,",
+				"          categoryName as string,",
+				"          discontinuedProductFlag2 as string,",
+				"          categoryCode1 as string,",
+				"          categoryName1 as string,",
+				"          searchCategoryCode as string,",
+				"          seriesCode as string,",
+				"          seriesName as string,",
+				"          minStandardUnitPrice as string,",
+				"          maxStandardUnitPrice as string,",
+				"          minPricePerPiece as string,",
+				"          maxPricePerPiece as string,",
+				"          brandCode as string,",
+				"          brandUrlCode as string,",
+				"          brandName as string,",
+				"          seriesStatus as string,",
+				"          catchCopy as string,",
+				"          minStandardDaysToShip as string,",
+				"          maxStandardDaysToShip as string,",
+				"          directCartType as string,",
+				"          priceCheckLessFlag as string,",
+				"          recommendFlag as string,",
+				"          volumeDiscountFlag as string,",
+				"          cValueFlag as string,",
+				"          stockItemFlag as string,",
+				"          displayStandardPriceFlag as string,",
+				"          discontinuedProductFlag as string,",
+				"          cadTypeList as string,",
+				"          comparisonSpecValueList as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

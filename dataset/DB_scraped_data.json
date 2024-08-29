@@ -1,0 +1,16 @@
+{
+	"name": "DB_scraped_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sql_task_2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "raw",
+			"table": "scraped_data"
+		}
+	}
+}

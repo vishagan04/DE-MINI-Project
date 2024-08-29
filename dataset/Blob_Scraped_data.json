@@ -1,0 +1,152 @@
+{
+	"name": "Blob_Scraped_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_blob_task_2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "products_with_price.csv",
+				"container": "input"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "departmentCode",
+				"type": "String"
+			},
+			{
+				"name": "departmentName",
+				"type": "String"
+			},
+			{
+				"name": "discontinuedProductFlag1",
+				"type": "String"
+			},
+			{
+				"name": "categoryCode",
+				"type": "String"
+			},
+			{
+				"name": "categoryName",
+				"type": "String"
+			},
+			{
+				"name": "discontinuedProductFlag2",
+				"type": "String"
+			},
+			{
+				"name": "categoryCode1",
+				"type": "String"
+			},
+			{
+				"name": "categoryName1",
+				"type": "String"
+			},
+			{
+				"name": "searchCategoryCode",
+				"type": "String"
+			},
+			{
+				"name": "seriesCode",
+				"type": "String"
+			},
+			{
+				"name": "seriesName",
+				"type": "String"
+			},
+			{
+				"name": "minStandardUnitPrice",
+				"type": "String"
+			},
+			{
+				"name": "maxStandardUnitPrice",
+				"type": "String"
+			},
+			{
+				"name": "minPricePerPiece",
+				"type": "String"
+			},
+			{
+				"name": "maxPricePerPiece",
+				"type": "String"
+			},
+			{
+				"name": "brandCode",
+				"type": "String"
+			},
+			{
+				"name": "brandUrlCode",
+				"type": "String"
+			},
+			{
+				"name": "brandName",
+				"type": "String"
+			},
+			{
+				"name": "seriesStatus",
+				"type": "String"
+			},
+			{
+				"name": "catchCopy",
+				"type": "String"
+			},
+			{
+				"name": "minStandardDaysToShip",
+				"type": "String"
+			},
+			{
+				"name": "maxStandardDaysToShip",
+				"type": "String"
+			},
+			{
+				"name": "directCartType",
+				"type": "String"
+			},
+			{
+				"name": "priceCheckLessFlag",
+				"type": "String"
+			},
+			{
+				"name": "recommendFlag",
+				"type": "String"
+			},
+			{
+				"name": "volumeDiscountFlag",
+				"type": "String"
+			},
+			{
+				"name": "cValueFlag",
+				"type": "String"
+			},
+			{
+				"name": "stockItemFlag",
+				"type": "String"
+			},
+			{
+				"name": "displayStandardPriceFlag",
+				"type": "String"
+			},
+			{
+				"name": "discontinuedProductFlag",
+				"type": "String"
+			},
+			{
+				"name": "cadTypeList",
+				"type": "String"
+			},
+			{
+				"name": "comparisonSpecValueList",
+				"type": "String"
+			}
+		]
+	}
+}
