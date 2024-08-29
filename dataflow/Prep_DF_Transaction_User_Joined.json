@@ -104,6 +104,7 @@
 				"     upsertable:false,",
 				"     recreate:true,",
 				"     format: 'table',",
+				"     preSQLs:['drop table if exists [Prep].[Transaction_user_details]'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"

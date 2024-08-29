@@ -59,6 +59,7 @@
 				"     upsertable:false,",
 				"     recreate:true,",
 				"     format: 'table',",
+				"     preSQLs:['drop table if exists [Reporting].[Trans_User]'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"

@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "DB_Reporting_trans_User_2",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -51,6 +51,7 @@
 				"     upsertable:false,",
 				"     recreate:true,",
 				"     format: 'table',",
+				"     preSQLs:['drop table if exists [Reporting].[Transaction_user_2]'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"

@@ -52,6 +52,7 @@
 				"     upsertable:false,",
 				"     recreate:true,",
 				"     format: 'table',",
+				"     preSQLs:['drop table if exists [Prep].[transaction]'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"

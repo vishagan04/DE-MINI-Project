@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "DB_Reporting_trans_User_2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_sql",
