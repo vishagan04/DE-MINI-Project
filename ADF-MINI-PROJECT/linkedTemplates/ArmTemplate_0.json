@@ -15,6 +15,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'MongoDbAtlas1'"
 		},
+		"LS_blob_task_2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_blob_task_2'"
+		},
+		"LS_sql_task_2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_sql_task_2'"
+		},
 		"LS_sql_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "ss-client-order.database.windows.net"
@@ -30,6 +38,18 @@
 		"MongoDbAtlas1_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "test"
+		},
+		"LS_sql_task_2_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "ss-client-order.database.windows.net"
+		},
+		"LS_sql_task_2_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "DB-task-2"
+		},
+		"LS_sql_task_2_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "vishagan"
 		}
 	},
 	"variables": {
@@ -69,6 +89,41 @@
 					"connectionString": "[parameters('MongoDbAtlas1_connectionString')]",
 					"database": "[parameters('MongoDbAtlas1_properties_typeProperties_database')]",
 					"driverVersion": "v2"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_blob_task_2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_blob_task_2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_sql_task_2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('LS_sql_task_2_properties_typeProperties_server')]",
+					"database": "[parameters('LS_sql_task_2_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_sql_task_2_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_sql_task_2_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -285,6 +340,184 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Scraped_data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_blob_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "products_with_price.csv",
+						"container": "input"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "departmentCode",
+						"type": "String"
+					},
+					{
+						"name": "departmentName",
+						"type": "String"
+					},
+					{
+						"name": "discontinuedProductFlag1",
+						"type": "String"
+					},
+					{
+						"name": "categoryCode",
+						"type": "String"
+					},
+					{
+						"name": "categoryName",
+						"type": "String"
+					},
+					{
+						"name": "discontinuedProductFlag2",
+						"type": "String"
+					},
+					{
+						"name": "categoryCode1",
+						"type": "String"
+					},
+					{
+						"name": "categoryName1",
+						"type": "String"
+					},
+					{
+						"name": "searchCategoryCode",
+						"type": "String"
+					},
+					{
+						"name": "seriesCode",
+						"type": "String"
+					},
+					{
+						"name": "seriesName",
+						"type": "String"
+					},
+					{
+						"name": "minStandardUnitPrice",
+						"type": "String"
+					},
+					{
+						"name": "maxStandardUnitPrice",
+						"type": "String"
+					},
+					{
+						"name": "minPricePerPiece",
+						"type": "String"
+					},
+					{
+						"name": "maxPricePerPiece",
+						"type": "String"
+					},
+					{
+						"name": "brandCode",
+						"type": "String"
+					},
+					{
+						"name": "brandUrlCode",
+						"type": "String"
+					},
+					{
+						"name": "brandName",
+						"type": "String"
+					},
+					{
+						"name": "seriesStatus",
+						"type": "String"
+					},
+					{
+						"name": "catchCopy",
+						"type": "String"
+					},
+					{
+						"name": "minStandardDaysToShip",
+						"type": "String"
+					},
+					{
+						"name": "maxStandardDaysToShip",
+						"type": "String"
+					},
+					{
+						"name": "directCartType",
+						"type": "String"
+					},
+					{
+						"name": "priceCheckLessFlag",
+						"type": "String"
+					},
+					{
+						"name": "recommendFlag",
+						"type": "String"
+					},
+					{
+						"name": "volumeDiscountFlag",
+						"type": "String"
+					},
+					{
+						"name": "cValueFlag",
+						"type": "String"
+					},
+					{
+						"name": "stockItemFlag",
+						"type": "String"
+					},
+					{
+						"name": "displayStandardPriceFlag",
+						"type": "String"
+					},
+					{
+						"name": "discontinuedProductFlag",
+						"type": "String"
+					},
+					{
+						"name": "cadTypeList",
+						"type": "String"
+					},
+					{
+						"name": "comparisonSpecValueList",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_blob_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_scraped_data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "raw",
+					"table": "scraped_data"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
 			]
 		},
 		{
@@ -717,287 +950,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DB_transaction')]",
 				"[concat(variables('factoryId'), '/datasets/DB_Prep_Transaction')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_clean_user')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "Task-1"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_user",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Prep_user",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(output(",
-						"          id as string,",
-						"          email as string,",
-						"          password as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DB_user')]",
-				"[concat(variables('factoryId'), '/datasets/DB_Prep_user')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Prep_DF_Transaction_User_Joined')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "Task-1"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_Prep_Transaction",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						},
-						{
-							"dataset": {
-								"referenceName": "DB_Prep_user",
-								"type": "DatasetReference"
-							},
-							"name": "source2"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Prep_Joined_Transaction_User",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "window1"
-						},
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "join1"
-						},
-						{
-							"name": "select1"
-						},
-						{
-							"name": "select2"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          id as string,",
-						"          name as string,",
-						"          type as string,",
-						"          amount as integer,",
-						"          date as date,",
-						"          user as string,",
-						"          year as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source(output(",
-						"          id as string,",
-						"          email as string,",
-						"          password as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source2",
-						"source1 window(over(type),",
-						"     {Total Amount} = sum(amount)) ~> window1",
-						"source2 derive(Name = substring(email, 0, length(email)-10)) ~> derivedColumn1",
-						"select1, select2 join(select1@user_id == select2@user_id,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> join1",
-						"window1 select(mapColumn(",
-						"          transaction_id = id,",
-						"          transaction_name = name,",
-						"          type,",
-						"          amount,",
-						"          date,",
-						"          user_id = user,",
-						"          year,",
-						"          {Total Amount}",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"derivedColumn1 select(mapColumn(",
-						"          user_id = id,",
-						"          email,",
-						"          password,",
-						"          Name",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select2",
-						"join1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DB_Prep_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/DB_Prep_user')]",
-				"[concat(variables('factoryId'), '/datasets/DB_Prep_Joined_Transaction_User')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Trans_User_1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Reporting_Transaction_User_1",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task - 1"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-29T04:55:02Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Transaction_User_1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Trans_User_2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Reporting_Trans_User_2",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task - 1"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-29T04:55:03Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Trans_User_2')]"
 			]
 		}
 	]
