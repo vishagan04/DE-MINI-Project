@@ -148,6 +148,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T05:11:08Z"
 			},
@@ -238,6 +241,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T10:03:26Z"
 			},
@@ -286,6 +292,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T04:55:02Z"
 			},
@@ -332,6 +341,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Task - 1"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T04:55:03Z"
@@ -381,6 +393,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
 			},
@@ -428,6 +443,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
 			},
@@ -474,6 +492,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Task - 1"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
@@ -653,6 +674,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T05:20:28Z"
 			},
@@ -675,6 +699,9 @@
 					"referenceName": "MongoDbAtlas1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Task-1"
+				},
 				"annotations": [],
 				"type": "MongoDbAtlasCollection",
 				"schema": [],
@@ -695,6 +722,9 @@
 					"referenceName": "MongoDbAtlas1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Task-1"
+				},
 				"annotations": [],
 				"type": "MongoDbAtlasCollection",
 				"schema": [],
@@ -714,6 +744,9 @@
 				"linkedServiceName": {
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -736,6 +769,9 @@
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Task-1"
+				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
@@ -756,6 +792,9 @@
 				"linkedServiceName": {
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -778,6 +817,9 @@
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Task-1"
+				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
@@ -798,6 +840,9 @@
 				"linkedServiceName": {
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -820,6 +865,9 @@
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Task-1"
+				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
@@ -840,6 +888,9 @@
 				"linkedServiceName": {
 					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -925,6 +976,9 @@
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "Task-1"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -975,7 +1029,6 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
-						"     preSQLs:['drop table if exists [Reporting].[Transaction_user_2]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -992,6 +1045,9 @@
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "Task-1"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -1050,7 +1106,6 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
-						"     preSQLs:['drop table if exists [Reporting].[Trans_User]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -1067,6 +1122,9 @@
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "Task-1"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -1118,7 +1176,6 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
-						"     preSQLs:['drop table if exists [Prep].[transaction]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -1135,6 +1192,9 @@
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "Task-1"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -1174,7 +1234,6 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
-						"     preSQLs:['drop table if exists [Prep].[user_details]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
@@ -1191,6 +1250,9 @@
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "Task-1"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
@@ -1294,7 +1356,6 @@
 						"     upsertable:false,",
 						"     recreate:true,",
 						"     format: 'table',",
-						"     preSQLs:['drop table if exists [Prep].[Transaction_user_details]'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"

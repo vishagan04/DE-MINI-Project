@@ -53,6 +53,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
 			},
@@ -98,6 +101,9 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"folder": {
+					"name": "Task - 1"
+				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
 			},
@@ -142,6 +148,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Task - 1"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
@@ -318,6 +327,9 @@
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Task - 1"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T05:20:28Z"
