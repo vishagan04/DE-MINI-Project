@@ -1,0 +1,16 @@
+{
+	"name": "Atlas_transaction",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MongoDbAtlas1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MongoDbAtlasCollection",
+		"schema": [],
+		"typeProperties": {
+			"collection": "transactions"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

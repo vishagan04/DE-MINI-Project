@@ -1,0 +1,17 @@
+{
+	"name": "DB_Prep_Joined_Transaction_User",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Prep",
+			"table": "Transaction_user_details"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

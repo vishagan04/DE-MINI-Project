@@ -1,0 +1,16 @@
+{
+	"name": "Atlas_user",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "MongoDbAtlas1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MongoDbAtlasCollection",
+		"schema": [],
+		"typeProperties": {
+			"collection": "users"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

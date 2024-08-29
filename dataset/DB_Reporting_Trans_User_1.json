@@ -1,0 +1,17 @@
+{
+	"name": "DB_Reporting_Trans_User_1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Reporting",
+			"table": "Trans_User"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

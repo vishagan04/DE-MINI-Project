@@ -1,0 +1,17 @@
+{
+	"name": "DB_Prep_Transaction",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_sql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Prep",
+			"table": "transaction"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
