@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "pipeline1",
+					"referenceName": "PL_trigger_all_pipeline",
 					"type": "PipelineReference"
 				}
 			}

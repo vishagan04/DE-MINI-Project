@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "PL_trigger_all_pipeline",
 	"properties": {
 		"activities": [
 			{
