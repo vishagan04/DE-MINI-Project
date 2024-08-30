@@ -1,0 +1,45 @@
+{
+	"name": "DF_Report_Scraped_data",
+	"properties": {
+		"folder": {
+			"name": "Task-2"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DB_cleaned_Scraped_data",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          departmentName as string,",
+				"          categoryName as string,",
+				"          categoryName1 as string,",
+				"          seriesCode as string,",
+				"          seriesName as string,",
+				"          minStandardUnitPrice as string,",
+				"          maxStandardUnitPrice as string,",
+				"          brandName as string,",
+				"          minStandardDaysToShip as string,",
+				"          maxStandardDaysToShip as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 derive() ~> derivedColumn1"
+			]
+		}
+	}
+}

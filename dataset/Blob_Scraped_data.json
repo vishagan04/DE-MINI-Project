@@ -5,6 +5,9 @@
 			"referenceName": "LS_blob_task_2",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Task-2"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
