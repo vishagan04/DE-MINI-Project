@@ -5,16 +5,16 @@
 		"factoryName": {
 			"value": "ADF-MINI-PROJECT"
 		},
-		"LS_sql_password": {
-			"value": ""
-		},
-		"MongoDbAtlas1_connectionString": {
-			"value": ""
-		},
 		"LS_blob_task_2_connectionString": {
 			"value": ""
 		},
+		"LS_sql_password": {
+			"value": ""
+		},
 		"LS_sql_task_2_password": {
+			"value": ""
+		},
+		"MongoDbAtlas1_connectionString": {
 			"value": ""
 		},
 		"LS_sql_properties_typeProperties_server": {
@@ -26,9 +26,6 @@
 		"LS_sql_properties_typeProperties_userName": {
 			"value": "vishagan"
 		},
-		"MongoDbAtlas1_properties_typeProperties_database": {
-			"value": "test"
-		},
 		"LS_sql_task_2_properties_typeProperties_server": {
 			"value": "ss-client-order.database.windows.net"
 		},
@@ -37,6 +34,9 @@
 		},
 		"LS_sql_task_2_properties_typeProperties_userName": {
 			"value": "vishagan"
+		},
+		"MongoDbAtlas1_properties_typeProperties_database": {
+			"value": "test"
 		}
 	}
 }

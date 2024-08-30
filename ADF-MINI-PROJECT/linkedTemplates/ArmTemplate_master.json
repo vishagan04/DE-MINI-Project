@@ -7,21 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADF-MINI-PROJECT"
 		},
-		"LS_sql_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_sql'"
-		},
-		"MongoDbAtlas1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'MongoDbAtlas1'"
-		},
 		"LS_blob_task_2_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_blob_task_2'"
 		},
+		"LS_sql_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_sql'"
+		},
 		"LS_sql_task_2_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_sql_task_2'"
+		},
+		"MongoDbAtlas1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MongoDbAtlas1'"
 		},
 		"LS_sql_properties_typeProperties_server": {
 			"type": "string",
@@ -35,10 +35,6 @@
 			"type": "string",
 			"defaultValue": "vishagan"
 		},
-		"MongoDbAtlas1_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "test"
-		},
 		"LS_sql_task_2_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "ss-client-order.database.windows.net"
@@ -50,6 +46,10 @@
 		"LS_sql_task_2_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "vishagan"
+		},
+		"MongoDbAtlas1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "test"
 		},
 		"containerUri": {
 			"type": "string",
@@ -78,17 +78,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"LS_sql_password": {
-						"value": "[parameters('LS_sql_password')]"
-					},
-					"MongoDbAtlas1_connectionString": {
-						"value": "[parameters('MongoDbAtlas1_connectionString')]"
-					},
 					"LS_blob_task_2_connectionString": {
 						"value": "[parameters('LS_blob_task_2_connectionString')]"
 					},
+					"LS_sql_password": {
+						"value": "[parameters('LS_sql_password')]"
+					},
 					"LS_sql_task_2_password": {
 						"value": "[parameters('LS_sql_task_2_password')]"
+					},
+					"MongoDbAtlas1_connectionString": {
+						"value": "[parameters('MongoDbAtlas1_connectionString')]"
 					},
 					"LS_sql_properties_typeProperties_server": {
 						"value": "[parameters('LS_sql_properties_typeProperties_server')]"
@@ -99,9 +99,6 @@
 					"LS_sql_properties_typeProperties_userName": {
 						"value": "[parameters('LS_sql_properties_typeProperties_userName')]"
 					},
-					"MongoDbAtlas1_properties_typeProperties_database": {
-						"value": "[parameters('MongoDbAtlas1_properties_typeProperties_database')]"
-					},
 					"LS_sql_task_2_properties_typeProperties_server": {
 						"value": "[parameters('LS_sql_task_2_properties_typeProperties_server')]"
 					},
@@ -110,6 +107,9 @@
 					},
 					"LS_sql_task_2_properties_typeProperties_userName": {
 						"value": "[parameters('LS_sql_task_2_properties_typeProperties_userName')]"
+					},
+					"MongoDbAtlas1_properties_typeProperties_database": {
+						"value": "[parameters('MongoDbAtlas1_properties_typeProperties_database')]"
 					}
 				}
 			},

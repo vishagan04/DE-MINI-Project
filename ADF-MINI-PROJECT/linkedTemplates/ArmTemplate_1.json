@@ -103,6 +103,301 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Blob_to_DB_Scraped_data')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Staging"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Blob_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          departmentCode as string,",
+						"          departmentName as string,",
+						"          discontinuedProductFlag1 as string,",
+						"          categoryCode as string,",
+						"          categoryName as string,",
+						"          discontinuedProductFlag2 as string,",
+						"          categoryCode1 as string,",
+						"          categoryName1 as string,",
+						"          searchCategoryCode as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as string,",
+						"          maxStandardUnitPrice as string,",
+						"          minPricePerPiece as string,",
+						"          maxPricePerPiece as string,",
+						"          brandCode as string,",
+						"          brandUrlCode as string,",
+						"          brandName as string,",
+						"          seriesStatus as string,",
+						"          catchCopy as string,",
+						"          minStandardDaysToShip as string,",
+						"          maxStandardDaysToShip as string,",
+						"          directCartType as string,",
+						"          priceCheckLessFlag as string,",
+						"          recommendFlag as string,",
+						"          volumeDiscountFlag as string,",
+						"          cValueFlag as string,",
+						"          stockItemFlag as string,",
+						"          displayStandardPriceFlag as string,",
+						"          discontinuedProductFlag as string,",
+						"          cadTypeList as string,",
+						"          comparisonSpecValueList as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Item_count')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Item_count",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentName as string,",
+						"          categoryName as string,",
+						"          categoryName1 as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          brandName as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(departmentName,",
+						"          categoryName,",
+						"          categoryName1),",
+						"     Total_item = count(categoryName1)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Min_Max_Shipping_days')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Min_Max_Days_To_Ship",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentName as string,",
+						"          categoryName as string,",
+						"          categoryName1 as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          brandName as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(departmentName,",
+						"          categoryName,",
+						"          categoryName1),",
+						"     {Minimum Days To Ship} = min(minStandardDaysToShip),",
+						"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Min_Max_Unit_Price')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Minb_Max_Unit_Price",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentName as string,",
+						"          categoryName as string,",
+						"          categoryName1 as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          brandName as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(departmentName,",
+						"          categoryName,",
+						"          categoryName1),",
+						"     {Minimum Unit Price} = min(minStandardUnitPrice),",
+						"          {Maximum Unit Price} = max(maxStandardUnitPrice)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Trans_User_2')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -227,6 +522,142 @@
 						"     amount = sum(amount)) ~> aggregate1",
 						"aggregate1 sort(asc(Name, true)) ~> sort1",
 						"sort1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_clean_Scraped_data')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Prep"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "window1"
+						},
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "select2"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentCode as string,",
+						"          departmentName as string,",
+						"          discontinuedProductFlag1 as string,",
+						"          categoryCode as string,",
+						"          categoryName as string,",
+						"          discontinuedProductFlag2 as string,",
+						"          categoryCode1 as string,",
+						"          categoryName1 as string,",
+						"          searchCategoryCode as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          minPricePerPiece as string,",
+						"          maxPricePerPiece as string,",
+						"          brandCode as string,",
+						"          brandUrlCode as string,",
+						"          brandName as string,",
+						"          seriesStatus as string,",
+						"          catchCopy as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer,",
+						"          directCartType as string,",
+						"          priceCheckLessFlag as string,",
+						"          recommendFlag as string,",
+						"          volumeDiscountFlag as string,",
+						"          cValueFlag as string,",
+						"          stockItemFlag as string,",
+						"          displayStandardPriceFlag as string,",
+						"          discontinuedProductFlag as string,",
+						"          cadTypeList as string,",
+						"          comparisonSpecValueList as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 select(mapColumn(",
+						"          departmentName,",
+						"          categoryName,",
+						"          categoryName1,",
+						"          seriesCode,",
+						"          seriesName,",
+						"          minStandardUnitPrice,",
+						"          maxStandardUnitPrice,",
+						"          brandName,",
+						"          minStandardDaysToShip,",
+						"          maxStandardDaysToShip",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select2 derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
+						"          maxStandardUnitPrice = iifNull(maxStandardUnitPrice, 0, maxStandardUnitPrice),",
+						"          minStandardDaysToShip = iifNull(minStandardDaysToShip, 0, minStandardDaysToShip),",
+						"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> derivedColumn1",
+						"select1 window(over(seriesCode),",
+						"     asc(seriesCode, true),",
+						"     Rank = iif(seriesCode==lag(seriesCode, 1), \"true\", \"false\")) ~> window1",
+						"window1 filter(Rank==\"false\") ~> filter1",
+						"filter1 select(mapColumn(",
+						"          departmentName,",
+						"          categoryName,",
+						"          categoryName1,",
+						"          seriesCode,",
+						"          seriesName,",
+						"          minStandardUnitPrice,",
+						"          maxStandardUnitPrice,",
+						"          brandName,",
+						"          minStandardDaysToShip,",
+						"          maxStandardDaysToShip",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -484,408 +915,200 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Blob_to_DB_Scraped_data')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"name": "[concat(parameters('factoryName'), '/PL_Prep_Scraped_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"folder": {
-					"name": "Task-2/Staging"
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_clean_Scraped_data",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Blob_Scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(output(",
-						"          departmentCode as string,",
-						"          departmentName as string,",
-						"          discontinuedProductFlag1 as string,",
-						"          categoryCode as string,",
-						"          categoryName as string,",
-						"          discontinuedProductFlag2 as string,",
-						"          categoryCode1 as string,",
-						"          categoryName1 as string,",
-						"          searchCategoryCode as string,",
-						"          seriesCode as string,",
-						"          seriesName as string,",
-						"          minStandardUnitPrice as string,",
-						"          maxStandardUnitPrice as string,",
-						"          minPricePerPiece as string,",
-						"          maxPricePerPiece as string,",
-						"          brandCode as string,",
-						"          brandUrlCode as string,",
-						"          brandName as string,",
-						"          seriesStatus as string,",
-						"          catchCopy as string,",
-						"          minStandardDaysToShip as string,",
-						"          maxStandardDaysToShip as string,",
-						"          directCartType as string,",
-						"          priceCheckLessFlag as string,",
-						"          recommendFlag as string,",
-						"          volumeDiscountFlag as string,",
-						"          cValueFlag as string,",
-						"          stockItemFlag as string,",
-						"          displayStandardPriceFlag as string,",
-						"          discontinuedProductFlag as string,",
-						"          cadTypeList as string,",
-						"          comparisonSpecValueList as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_clean_Scraped_data')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
 				"folder": {
 					"name": "Task-2/Prep"
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_cleaned_Scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "select1"
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_clean_Scraped_data')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Item_count')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
 						},
-						{
-							"name": "derivedColumn1"
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Reporting_Item_count",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
 						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          departmentCode as string,",
-						"          departmentName as string,",
-						"          discontinuedProductFlag1 as string,",
-						"          categoryCode as string,",
-						"          categoryName as string,",
-						"          discontinuedProductFlag2 as string,",
-						"          categoryCode1 as string,",
-						"          categoryName1 as string,",
-						"          searchCategoryCode as string,",
-						"          seriesCode as string,",
-						"          seriesName as string,",
-						"          minStandardUnitPrice as integer,",
-						"          maxStandardUnitPrice as integer,",
-						"          minPricePerPiece as string,",
-						"          maxPricePerPiece as string,",
-						"          brandCode as string,",
-						"          brandUrlCode as string,",
-						"          brandName as string,",
-						"          seriesStatus as string,",
-						"          catchCopy as string,",
-						"          minStandardDaysToShip as integer,",
-						"          maxStandardDaysToShip as integer,",
-						"          directCartType as string,",
-						"          priceCheckLessFlag as string,",
-						"          recommendFlag as string,",
-						"          volumeDiscountFlag as string,",
-						"          cValueFlag as string,",
-						"          stockItemFlag as string,",
-						"          displayStandardPriceFlag as string,",
-						"          discontinuedProductFlag as string,",
-						"          cadTypeList as string,",
-						"          comparisonSpecValueList as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 select(mapColumn(",
-						"          departmentName,",
-						"          categoryName,",
-						"          categoryName1,",
-						"          seriesCode,",
-						"          seriesName,",
-						"          minStandardUnitPrice,",
-						"          maxStandardUnitPrice,",
-						"          brandName,",
-						"          minStandardDaysToShip,",
-						"          maxStandardDaysToShip",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
-						"          maxStandardUnitPrice = iifNull(maxStandardUnitPrice, 0, maxStandardUnitPrice),",
-						"          minStandardDaysToShip = iifNull(minStandardDaysToShip, 0, minStandardDaysToShip),",
-						"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Item_count')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
 				"folder": {
 					"name": "Task-2/Reporting"
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_cleaned_Scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Reporting_Item_count",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          departmentName as string,",
-						"          categoryName as string,",
-						"          categoryName1 as string,",
-						"          seriesCode as string,",
-						"          seriesName as string,",
-						"          minStandardUnitPrice as integer,",
-						"          maxStandardUnitPrice as integer,",
-						"          brandName as string,",
-						"          minStandardDaysToShip as integer,",
-						"          maxStandardDaysToShip as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(departmentName,",
-						"          categoryName,",
-						"          categoryName1),",
-						"     Total_item = count(categoryName1)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
+				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Item_count')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Min_Max_Unit_Price')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Min_Max_Days_To_Ship')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Reporting_Min_Max_Shipping_days",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
 				"folder": {
 					"name": "Task-2/Reporting"
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_cleaned_Scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Reporting_Minb_Max_Unit_Price",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          departmentName as string,",
-						"          categoryName as string,",
-						"          categoryName1 as string,",
-						"          seriesCode as string,",
-						"          seriesName as string,",
-						"          minStandardUnitPrice as integer,",
-						"          maxStandardUnitPrice as integer,",
-						"          brandName as string,",
-						"          minStandardDaysToShip as integer,",
-						"          maxStandardDaysToShip as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(departmentName,",
-						"          categoryName,",
-						"          categoryName1),",
-						"     {Minimum Unit Price} = min(minStandardUnitPrice),",
-						"          {Maximum Unit Price} = max(maxStandardUnitPrice)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
+				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Min_Max_Shipping_days')]"
+			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Min_Max_Shipping_days')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
+			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Min_Max_Unit_Price')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Reporting_Min_Max_Unit_Price",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
 				"folder": {
 					"name": "Task-2/Reporting"
 				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_cleaned_Scraped_data",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Reporting_Min_Max_Days_To_Ship",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          departmentName as string,",
-						"          categoryName as string,",
-						"          categoryName1 as string,",
-						"          seriesCode as string,",
-						"          seriesName as string,",
-						"          minStandardUnitPrice as integer,",
-						"          maxStandardUnitPrice as integer,",
-						"          brandName as string,",
-						"          minStandardDaysToShip as integer,",
-						"          maxStandardDaysToShip as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(departmentName,",
-						"          categoryName,",
-						"          categoryName1),",
-						"     {Minimum Days To Ship} = min(minStandardDaysToShip),",
-						"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
+				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Min_Max_Unit_Price')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Trans_User_1')]",
@@ -1039,106 +1262,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_clean_transaction')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_clean_transaction",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task - 1/Prep"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-28T12:43:38Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_clean_transaction')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_clean_user')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_clean_user",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task - 1/Prep"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-28T12:43:38Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_clean_user')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/PL_blob_to_db_Scraped_data')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1188,7 +1311,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_Prep_Scraped_data')]",
+			"name": "[concat(parameters('factoryName'), '/PL_clean_transaction')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1207,7 +1330,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "DF_clean_Scraped_data",
+								"referenceName": "DF_clean_transaction",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1228,110 +1351,13 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task-2/Prep"
+					"name": "Task - 1/Prep"
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2024-08-28T12:43:38Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_clean_Scraped_data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Item_count')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Reporting_Item_count",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task-2/Reporting"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Item_count')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Min_Max_Unit_Price')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "DF_Reporting_Min_Max_Unit_Price",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task-2/Reporting"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Min_Max_Unit_Price')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_clean_transaction')]"
 			]
 		}
 	]

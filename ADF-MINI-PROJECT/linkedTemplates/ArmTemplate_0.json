@@ -7,21 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADF-MINI-PROJECT"
 		},
-		"LS_sql_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_sql'"
-		},
-		"MongoDbAtlas1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'MongoDbAtlas1'"
-		},
 		"LS_blob_task_2_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_blob_task_2'"
 		},
+		"LS_sql_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_sql'"
+		},
 		"LS_sql_task_2_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_sql_task_2'"
+		},
+		"MongoDbAtlas1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'MongoDbAtlas1'"
 		},
 		"LS_sql_properties_typeProperties_server": {
 			"type": "string",
@@ -35,10 +35,6 @@
 			"type": "string",
 			"defaultValue": "vishagan"
 		},
-		"MongoDbAtlas1_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "test"
-		},
 		"LS_sql_task_2_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "ss-client-order.database.windows.net"
@@ -50,12 +46,29 @@
 		"LS_sql_task_2_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "vishagan"
+		},
+		"MongoDbAtlas1_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "test"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_blob_task_2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_blob_task_2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/LS_sql')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -79,34 +92,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MongoDbAtlas1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "MongoDbAtlas",
-				"typeProperties": {
-					"connectionString": "[parameters('MongoDbAtlas1_connectionString')]",
-					"database": "[parameters('MongoDbAtlas1_properties_typeProperties_database')]",
-					"driverVersion": "v2"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_blob_task_2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_blob_task_2_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/LS_sql_task_2')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -124,6 +109,21 @@
 						"type": "SecureString",
 						"value": "[parameters('LS_sql_task_2_password')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MongoDbAtlas1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "MongoDbAtlas",
+				"typeProperties": {
+					"connectionString": "[parameters('MongoDbAtlas1_connectionString')]",
+					"database": "[parameters('MongoDbAtlas1_properties_typeProperties_database')]",
+					"driverVersion": "v2"
 				}
 			},
 			"dependsOn": []
@@ -172,174 +172,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/MongoDbAtlas1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_Prep_Joined_Transaction_User')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Prep"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Prep",
-					"table": "Transaction_user_details"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_Prep_Transaction')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Prep"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Prep",
-					"table": "transaction"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_Prep_user')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Prep"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Prep",
-					"table": "user_details"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Trans_User_1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Reporting"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Reporting",
-					"table": "Trans_User"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_Reporting_trans_User_2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Reporting"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "Reporting",
-					"table": "Transaction_user_2"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_transaction')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Staging"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "RAW",
-					"table": "transactions_details"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_user')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-1/Staging"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "RAW",
-					"table": "user_details"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
 			]
 		},
 		{
@@ -503,51 +335,75 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DB_scraped_data')]",
+			"name": "[concat(parameters('factoryName'), '/DB_Prep_Joined_Transaction_User')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "LS_sql_task_2",
+					"referenceName": "LS_sql",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-2/Staging"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "raw",
-					"table": "scraped_data"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DB_cleaned_Scraped_data')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_sql_task_2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Task-2/Prep"
+					"name": "Task-1/Prep"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {
 					"schema": "Prep",
-					"table": "Cleaned_Scraping_data"
+					"table": "Transaction_user_details"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Prep_Transaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1/Prep"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Prep",
+					"table": "transaction"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Prep_user')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1/Prep"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Prep",
+					"table": "user_details"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
 			]
 		},
 		{
@@ -568,6 +424,30 @@
 				"typeProperties": {
 					"schema": "Reporting",
 					"table": "Item_count"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Min_Max_Days_To_Ship')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Min_Max_Days_To_Ship"
 				}
 			},
 			"dependsOn": [
@@ -599,7 +479,55 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Min_Max_Days_To_Ship')]",
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Trans_User_1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1/Reporting"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Trans_User"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_trans_User_2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1/Reporting"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Transaction_user_2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_cleaned_Scraped_data')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -608,18 +536,90 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-2/Reporting"
+					"name": "Task-2/Prep"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {
-					"schema": "Reporting",
-					"table": "Min_Max_Days_To_Ship"
+					"schema": "Prep",
+					"table": "Cleaned_Scraping_data"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_scraped_data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-2/Staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "raw",
+					"table": "scraped_data"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_transaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1/Staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "RAW",
+					"table": "transactions_details"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_user')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-1/Staging"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "RAW",
+					"table": "user_details"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql')]"
 			]
 		},
 		{
