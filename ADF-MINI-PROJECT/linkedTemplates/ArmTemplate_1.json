@@ -118,7 +118,7 @@
 								"referenceName": "Blob_Scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "BlobScrapedData"
 						}
 					],
 					"sinks": [
@@ -127,7 +127,7 @@
 								"referenceName": "DB_scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "DBScrapedData"
 						}
 					],
 					"transformations": [],
@@ -168,8 +168,8 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
+						"     ignoreNoFilesFound: false) ~> BlobScrapedData",
+						"BlobScrapedData sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -179,7 +179,7 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> DBScrapedData"
 					]
 				}
 			},
@@ -201,7 +201,7 @@
 								"referenceName": "DB_cleaned_Scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "DBCleanedScrapData"
 						}
 					],
 					"sinks": [
@@ -210,12 +210,12 @@
 								"referenceName": "DB_Reporting_Item_count",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "ReportingItemCount"
 						}
 					],
 					"transformations": [
 						{
-							"name": "aggregate1"
+							"name": "ItemCount"
 						}
 					],
 					"scriptLines": [
@@ -234,12 +234,12 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(departmentName,",
+						"     format: 'table') ~> DBCleanedScrapData",
+						"DBCleanedScrapData aggregate(groupBy(departmentName,",
 						"          categoryName,",
 						"          categoryName1),",
-						"     Total_item = count(categoryName1)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"     Total_item = count(categoryName1)) ~> ItemCount",
+						"ItemCount sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -249,7 +249,7 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> ReportingItemCount"
 					]
 				}
 			},
@@ -271,7 +271,7 @@
 								"referenceName": "DB_cleaned_Scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "DBCleanedScrapData"
 						}
 					],
 					"sinks": [
@@ -280,12 +280,12 @@
 								"referenceName": "DB_Reporting_Min_Max_Days_To_Ship",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "ReportingMinMaxDaysToShip"
 						}
 					],
 					"transformations": [
 						{
-							"name": "aggregate1"
+							"name": "MinMaxDaysToShip"
 						}
 					],
 					"scriptLines": [
@@ -304,13 +304,13 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(departmentName,",
+						"     format: 'table') ~> DBCleanedScrapData",
+						"DBCleanedScrapData aggregate(groupBy(departmentName,",
 						"          categoryName,",
 						"          categoryName1),",
 						"     {Minimum Days To Ship} = min(minStandardDaysToShip),",
-						"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> MinMaxDaysToShip",
+						"MinMaxDaysToShip sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -320,7 +320,7 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> ReportingMinMaxDaysToShip"
 					]
 				}
 			},
@@ -342,7 +342,7 @@
 								"referenceName": "DB_cleaned_Scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "DBCleanedScrapData"
 						}
 					],
 					"sinks": [
@@ -351,12 +351,12 @@
 								"referenceName": "DB_Reporting_Minb_Max_Unit_Price",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "ReportingMinMaxUnitPrice"
 						}
 					],
 					"transformations": [
 						{
-							"name": "aggregate1"
+							"name": "MinMaxUnitPrice"
 						}
 					],
 					"scriptLines": [
@@ -375,13 +375,13 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(departmentName,",
+						"     format: 'table') ~> DBCleanedScrapData",
+						"DBCleanedScrapData aggregate(groupBy(departmentName,",
 						"          categoryName,",
 						"          categoryName1),",
 						"     {Minimum Unit Price} = min(minStandardUnitPrice),",
-						"          {Maximum Unit Price} = max(maxStandardUnitPrice)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"          {Maximum Unit Price} = max(maxStandardUnitPrice)) ~> MinMaxUnitPrice",
+						"MinMaxUnitPrice sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -391,7 +391,7 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> ReportingMinMaxUnitPrice"
 					]
 				}
 			},
@@ -553,7 +553,7 @@
 								"referenceName": "DB_scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "DBScrapedData"
 						}
 					],
 					"sinks": [
@@ -562,24 +562,24 @@
 								"referenceName": "DB_cleaned_Scraped_data",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "DBCleanedScrapedData"
 						}
 					],
 					"transformations": [
 						{
-							"name": "select1"
+							"name": "SelectingRequiredColoumn"
 						},
 						{
-							"name": "derivedColumn1"
+							"name": "RemovingNullIntoZero"
 						},
 						{
-							"name": "window1"
+							"name": "RemovingDuplicate"
 						},
 						{
-							"name": "filter1"
+							"name": "FIlterByRank"
 						},
 						{
-							"name": "select2"
+							"name": "RemovingRankColomn"
 						}
 					],
 					"scriptLines": [
@@ -620,8 +620,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 select(mapColumn(",
+						"     format: 'table') ~> DBScrapedData",
+						"DBScrapedData select(mapColumn(",
 						"          departmentName,",
 						"          categoryName,",
 						"          categoryName1,",
@@ -634,16 +634,16 @@
 						"          maxStandardDaysToShip",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select2 derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
+						"     skipDuplicateMapOutputs: true) ~> SelectingRequiredColoumn",
+						"RemovingRankColomn derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
 						"          maxStandardUnitPrice = iifNull(maxStandardUnitPrice, 0, maxStandardUnitPrice),",
 						"          minStandardDaysToShip = iifNull(minStandardDaysToShip, 0, minStandardDaysToShip),",
-						"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> derivedColumn1",
-						"select1 window(over(seriesCode),",
+						"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> RemovingNullIntoZero",
+						"SelectingRequiredColoumn window(over(seriesCode),",
 						"     asc(seriesCode, true),",
-						"     Rank = iif(seriesCode==lag(seriesCode, 1), \"true\", \"false\")) ~> window1",
-						"window1 filter(Rank==\"false\") ~> filter1",
-						"filter1 select(mapColumn(",
+						"     Rank = iif(seriesCode==lag(seriesCode, 1), \"true\", \"false\")) ~> RemovingDuplicate",
+						"RemovingDuplicate filter(Rank==\"false\") ~> FIlterByRank",
+						"FIlterByRank select(mapColumn(",
 						"          departmentName,",
 						"          categoryName,",
 						"          categoryName1,",
@@ -656,8 +656,8 @@
 						"          maxStandardDaysToShip",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select2",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     skipDuplicateMapOutputs: true) ~> RemovingRankColomn",
+						"RemovingNullIntoZero sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
 						"     insertable:true,",
@@ -667,7 +667,7 @@
 						"     format: 'table',",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+						"     errorHandlingOption: 'stopOnFirstError') ~> DBCleanedScrapedData"
 					]
 				}
 			},
@@ -938,8 +938,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
+									"DBScrapedData": {},
+									"DBCleanedScrapedData": {}
 								}
 							},
 							"staging": {},
@@ -987,8 +987,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
+									"DBCleanedScrapData": {},
+									"ReportingItemCount": {}
 								}
 							},
 							"staging": {},
@@ -1036,8 +1036,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
+									"DBCleanedScrapData": {},
+									"ReportingMinMaxDaysToShip": {}
 								}
 							},
 							"staging": {},
@@ -1085,8 +1085,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
+									"DBCleanedScrapData": {},
+									"ReportingMinMaxUnitPrice": {}
 								}
 							},
 							"staging": {},
@@ -1285,8 +1285,8 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"sink1": {}
+									"BlobScrapedData": {},
+									"DBScrapedData": {}
 								}
 							},
 							"staging": {},
