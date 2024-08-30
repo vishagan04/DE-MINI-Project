@@ -12,7 +12,7 @@
 						"referenceName": "DB_cleaned_Scraped_data",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "DBCleanedScrapData"
 				}
 			],
 			"sinks": [
@@ -21,12 +21,12 @@
 						"referenceName": "DB_Reporting_Item_count",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "ReportingItemCount"
 				}
 			],
 			"transformations": [
 				{
-					"name": "aggregate1"
+					"name": "ItemCount"
 				}
 			],
 			"scriptLines": [
@@ -45,12 +45,12 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
-				"source1 aggregate(groupBy(departmentName,",
+				"     format: 'table') ~> DBCleanedScrapData",
+				"DBCleanedScrapData aggregate(groupBy(departmentName,",
 				"          categoryName,",
 				"          categoryName1),",
-				"     Total_item = count(categoryName1)) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"     Total_item = count(categoryName1)) ~> ItemCount",
+				"ItemCount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -60,7 +60,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> ReportingItemCount"
 			]
 		}
 	}

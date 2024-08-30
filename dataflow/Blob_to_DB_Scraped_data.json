@@ -12,7 +12,7 @@
 						"referenceName": "Blob_Scraped_data",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "BlobScrapedData"
 				}
 			],
 			"sinks": [
@@ -21,7 +21,7 @@
 						"referenceName": "DB_scraped_data",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "DBScrapedData"
 				}
 			],
 			"transformations": [],
@@ -62,8 +62,8 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"     ignoreNoFilesFound: false) ~> BlobScrapedData",
+				"BlobScrapedData sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -73,7 +73,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> DBScrapedData"
 			]
 		}
 	}

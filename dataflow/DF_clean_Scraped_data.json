@@ -12,7 +12,7 @@
 						"referenceName": "DB_scraped_data",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "DBScrapedData"
 				}
 			],
 			"sinks": [
@@ -21,24 +21,24 @@
 						"referenceName": "DB_cleaned_Scraped_data",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "DBCleanedScrapedData"
 				}
 			],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "SelectingRequiredColoumn"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "RemovingNullIntoZero"
 				},
 				{
-					"name": "window1"
+					"name": "RemovingDuplicate"
 				},
 				{
-					"name": "filter1"
+					"name": "FIlterByRank"
 				},
 				{
-					"name": "select2"
+					"name": "RemovingRankColomn"
 				}
 			],
 			"scriptLines": [
@@ -79,8 +79,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
-				"source1 select(mapColumn(",
+				"     format: 'table') ~> DBScrapedData",
+				"DBScrapedData select(mapColumn(",
 				"          departmentName,",
 				"          categoryName,",
 				"          categoryName1,",
@@ -93,16 +93,16 @@
 				"          maxStandardDaysToShip",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select2 derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
+				"     skipDuplicateMapOutputs: true) ~> SelectingRequiredColoumn",
+				"RemovingRankColomn derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
 				"          maxStandardUnitPrice = iifNull(maxStandardUnitPrice, 0, maxStandardUnitPrice),",
 				"          minStandardDaysToShip = iifNull(minStandardDaysToShip, 0, minStandardDaysToShip),",
-				"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> derivedColumn1",
-				"select1 window(over(seriesCode),",
+				"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> RemovingNullIntoZero",
+				"SelectingRequiredColoumn window(over(seriesCode),",
 				"     asc(seriesCode, true),",
-				"     Rank = iif(seriesCode==lag(seriesCode, 1), \"true\", \"false\")) ~> window1",
-				"window1 filter(Rank==\"false\") ~> filter1",
-				"filter1 select(mapColumn(",
+				"     Rank = iif(seriesCode==lag(seriesCode, 1), \"true\", \"false\")) ~> RemovingDuplicate",
+				"RemovingDuplicate filter(Rank==\"false\") ~> FIlterByRank",
+				"FIlterByRank select(mapColumn(",
 				"          departmentName,",
 				"          categoryName,",
 				"          categoryName1,",
@@ -115,8 +115,8 @@
 				"          maxStandardDaysToShip",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> RemovingRankColomn",
+				"RemovingNullIntoZero sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -126,7 +126,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> DBCleanedScrapedData"
 			]
 		}
 	}

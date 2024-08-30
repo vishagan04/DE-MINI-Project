@@ -12,7 +12,7 @@
 						"referenceName": "DB_cleaned_Scraped_data",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "DBCleanedScrapData"
 				}
 			],
 			"sinks": [
@@ -21,12 +21,12 @@
 						"referenceName": "DB_Reporting_Min_Max_Days_To_Ship",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "ReportingMinMaxDaysToShip"
 				}
 			],
 			"transformations": [
 				{
-					"name": "aggregate1"
+					"name": "MinMaxDaysToShip"
 				}
 			],
 			"scriptLines": [
@@ -45,13 +45,13 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
-				"source1 aggregate(groupBy(departmentName,",
+				"     format: 'table') ~> DBCleanedScrapData",
+				"DBCleanedScrapData aggregate(groupBy(departmentName,",
 				"          categoryName,",
 				"          categoryName1),",
 				"     {Minimum Days To Ship} = min(minStandardDaysToShip),",
-				"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> MinMaxDaysToShip",
+				"MinMaxDaysToShip sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -61,7 +61,7 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError') ~> ReportingMinMaxDaysToShip"
 			]
 		}
 	}
