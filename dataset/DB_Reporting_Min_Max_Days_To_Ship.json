@@ -1,20 +1,19 @@
 {
-	"name": "DB_Reporting_Trans_User_1",
+	"name": "DB_Reporting_Min_Max_Days_To_Ship",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_sql",
+			"referenceName": "LS_sql_task_2",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Task-1/Reporting"
+			"name": "Task-2/Reporting"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
 			"schema": "Reporting",
-			"table": "Trans_User"
+			"table": "Min_Max_Days_To_Ship"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

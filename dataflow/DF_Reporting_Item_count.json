@@ -1,15 +1,15 @@
 {
-	"name": "DF_clean_transaction",
+	"name": "DF_Reporting_Item_count",
 	"properties": {
 		"folder": {
-			"name": "Task-1/Prep"
+			"name": "Task-2/Reporting"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DB_transaction",
+						"referenceName": "DB_cleaned_Scraped_data",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -18,7 +18,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DB_Prep_Transaction",
+						"referenceName": "DB_Reporting_Item_count",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
@@ -26,28 +26,31 @@
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
-				},
-				{
-					"name": "derivedColumn2"
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          id as string,",
-				"          name as string,",
-				"          type as string,",
-				"          amount as integer,",
-				"          date as string,",
-				"          user as string",
+				"          departmentName as string,",
+				"          categoryName as string,",
+				"          categoryName1 as string,",
+				"          seriesCode as string,",
+				"          seriesName as string,",
+				"          minStandardUnitPrice as integer,",
+				"          maxStandardUnitPrice as integer,",
+				"          brandName as string,",
+				"          minStandardDaysToShip as integer,",
+				"          maxStandardDaysToShip as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
-				"source1 derive(date = toDate(toTimestamp(toInteger(toLong(date) / toLong(1000))*1000l))) ~> derivedColumn1",
-				"derivedColumn1 derive(year = year(date)) ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"source1 aggregate(groupBy(departmentName,",
+				"          categoryName,",
+				"          categoryName1),",
+				"     Total_item = count(categoryName1)) ~> aggregate1",
+				"aggregate1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",

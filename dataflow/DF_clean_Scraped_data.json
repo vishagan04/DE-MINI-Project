@@ -2,7 +2,7 @@
 	"name": "DF_clean_Scraped_data",
 	"properties": {
 		"folder": {
-			"name": "Task-2"
+			"name": "Task-2/Prep"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {

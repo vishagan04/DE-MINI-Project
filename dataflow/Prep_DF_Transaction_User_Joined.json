@@ -2,7 +2,7 @@
 	"name": "Prep_DF_Transaction_User_Joined",
 	"properties": {
 		"folder": {
-			"name": "Task-1"
+			"name": "Task-1/Prep"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {

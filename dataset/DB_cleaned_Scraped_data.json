@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Task-2"
+			"name": "Task-2/Prep"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",

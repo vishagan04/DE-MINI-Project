@@ -2,7 +2,7 @@
 	"name": "Blob_to_DB_Scraped_data",
 	"properties": {
 		"folder": {
-			"name": "Task-2"
+			"name": "Task-2/Staging"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {

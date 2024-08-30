@@ -1,5 +1,5 @@
 {
-	"name": "PL_clean_transaction",
+	"name": "PL_Reporting_Min_Max_Days_To_Ship",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "DF_clean_transaction",
+						"referenceName": "DF_Reporting_Min_Max_Shipping_days",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -28,10 +28,8 @@
 			}
 		],
 		"folder": {
-			"name": "Task - 1/Prep"
+			"name": "Task-2/Reporting"
 		},
-		"annotations": [],
-		"lastPublishTime": "2024-08-28T12:43:38Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }

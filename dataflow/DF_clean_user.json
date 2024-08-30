@@ -2,7 +2,7 @@
 	"name": "DF_clean_user",
 	"properties": {
 		"folder": {
-			"name": "Task-1"
+			"name": "Task-1/Prep"
 		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
