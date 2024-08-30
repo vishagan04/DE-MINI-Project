@@ -30,6 +30,15 @@
 				},
 				{
 					"name": "derivedColumn1"
+				},
+				{
+					"name": "window1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -85,10 +94,28 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
+				"select2 derive(minStandardUnitPrice = iifNull(minStandardUnitPrice, 0, minStandardUnitPrice),",
 				"          maxStandardUnitPrice = iifNull(maxStandardUnitPrice, 0, maxStandardUnitPrice),",
 				"          minStandardDaysToShip = iifNull(minStandardDaysToShip, 0, minStandardDaysToShip),",
 				"          maxStandardDaysToShip = iifNull(maxStandardDaysToShip, 0, maxStandardDaysToShip)) ~> derivedColumn1",
+				"select1 window(over(seriesCode),",
+				"     asc(seriesCode, true),",
+				"     Rank = iif(seriesCode==lag(seriesCode, 1), \"true\", \"false\")) ~> window1",
+				"window1 filter(Rank==\"false\") ~> filter1",
+				"filter1 select(mapColumn(",
+				"          departmentName,",
+				"          categoryName,",
+				"          categoryName1,",
+				"          seriesCode,",
+				"          seriesName,",
+				"          minStandardUnitPrice,",
+				"          maxStandardUnitPrice,",
+				"          brandName,",
+				"          minStandardDaysToShip,",
+				"          maxStandardDaysToShip",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
 				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
