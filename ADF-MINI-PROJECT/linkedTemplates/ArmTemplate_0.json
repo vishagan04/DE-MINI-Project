@@ -138,7 +138,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Staging"
 				},
 				"annotations": [],
 				"type": "MongoDbAtlasCollection",
@@ -161,7 +161,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Staging"
 				},
 				"annotations": [],
 				"type": "MongoDbAtlasCollection",
@@ -184,7 +184,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Prep"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -208,7 +208,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Prep"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -232,7 +232,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Prep"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -256,7 +256,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Reporting"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -280,7 +280,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Reporting"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -304,7 +304,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Staging"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -328,7 +328,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Staging"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -512,7 +512,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-2"
+					"name": "Task-2/Staging"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -536,7 +536,7 @@
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Task-2"
+					"name": "Task-2/Prep"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -544,6 +544,78 @@
 				"typeProperties": {
 					"schema": "Prep",
 					"table": "Cleaned_Scraping_data"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Item_count')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Item_count"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Minb_Max_Unit_Price')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Min_Max_Unit_Price"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_sql_task_2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DB_Reporting_Min_Max_Days_To_Ship')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_sql_task_2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "Reporting",
+					"table": "Min_Max_Days_To_Ship"
 				}
 			},
 			"dependsOn": [
@@ -663,7 +735,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task - 1/Staging"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T05:11:08Z"
@@ -671,245 +743,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Atlas_transaction')]",
 				"[concat(variables('factoryId'), '/datasets/DB_transaction')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AT_to_DB_user')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "MongoDbAtlasSource",
-								"batchSize": 100
-							},
-							"sink": {
-								"type": "AzureSqlSink",
-								"preCopyScript": "drop table if exists [RAW].[user_details]",
-								"writeBehavior": "insert",
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate",
-								"disableMetricsCollection": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['_id']['$oid']"
-										},
-										"sink": {
-											"name": "id"
-										}
-									},
-									{
-										"source": {
-											"path": "$['email']"
-										},
-										"sink": {
-											"name": "email"
-										}
-									},
-									{
-										"source": {
-											"path": "$['password']"
-										},
-										"sink": {
-											"name": "password"
-										}
-									}
-								],
-								"mapComplexValuesToString": true
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Atlas_user",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DB_user",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Task - 1"
-				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-28T10:03:26Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Atlas_user')]",
-				"[concat(variables('factoryId'), '/datasets/DB_user')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Trans_User_2')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "Task-1"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_Reporting_Trans_User_1",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Reporting_trans_User_2",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "window1"
-						},
-						{
-							"name": "filter1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Name as string,",
-						"          type as string,",
-						"          amount as long",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 window(over(type),",
-						"     desc(amount, true),",
-						"     highest = max(amount)) ~> window1",
-						"window1 filter(amount==highest) ~> filter1",
-						"filter1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DB_Reporting_Trans_User_1')]",
-				"[concat(variables('factoryId'), '/datasets/DB_Reporting_trans_User_2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Transaction_User_1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "Task-1"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DB_Prep_Joined_Transaction_User",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DB_Reporting_Trans_User_1",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "aggregate1"
-						},
-						{
-							"name": "sort1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          transaction_id as string,",
-						"          transaction_name as string,",
-						"          type as string,",
-						"          amount as integer,",
-						"          date as date,",
-						"          user_id as string,",
-						"          year as integer,",
-						"          {Total Amount} as long,",
-						"          email as string,",
-						"          password as string,",
-						"          Name as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     isolationLevel: 'READ_UNCOMMITTED',",
-						"     format: 'table') ~> source1",
-						"source1 aggregate(groupBy(Name,",
-						"          type),",
-						"     amount = sum(amount)) ~> aggregate1",
-						"aggregate1 sort(asc(Name, true)) ~> sort1",
-						"sort1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     recreate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DB_Prep_Joined_Transaction_User')]",
-				"[concat(variables('factoryId'), '/datasets/DB_Reporting_Trans_User_1')]"
 			]
 		}
 	]

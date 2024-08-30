@@ -13,12 +13,242 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/AT_to_DB_user')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "MongoDbAtlasSource",
+								"batchSize": 100
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"preCopyScript": "drop table if exists [RAW].[user_details]",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['_id']['$oid']"
+										},
+										"sink": {
+											"name": "id"
+										}
+									},
+									{
+										"source": {
+											"path": "$['email']"
+										},
+										"sink": {
+											"name": "email"
+										}
+									},
+									{
+										"source": {
+											"path": "$['password']"
+										},
+										"sink": {
+											"name": "password"
+										}
+									}
+								],
+								"mapComplexValuesToString": true
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Atlas_user",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DB_user",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Task - 1/Staging"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-08-28T10:03:26Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Trans_User_2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-1/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Trans_User_1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_trans_User_2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "window1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Name as string,",
+						"          type as string,",
+						"          amount as long",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 window(over(type),",
+						"     desc(amount, true),",
+						"     highest = max(amount)) ~> window1",
+						"window1 filter(amount==highest) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Transaction_User_1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-1/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_Prep_Joined_Transaction_User",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Trans_User_1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "sort1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          transaction_id as string,",
+						"          transaction_name as string,",
+						"          type as string,",
+						"          amount as integer,",
+						"          date as date,",
+						"          user_id as string,",
+						"          year as integer,",
+						"          {Total Amount} as long,",
+						"          email as string,",
+						"          password as string,",
+						"          Name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(Name,",
+						"          type),",
+						"     amount = sum(amount)) ~> aggregate1",
+						"aggregate1 sort(asc(Name, true)) ~> sort1",
+						"sort1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DF_clean_transaction')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Prep"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -85,7 +315,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Prep"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -140,7 +370,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "Task-1"
+					"name": "Task-1/Prep"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -259,7 +489,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "Task-2"
+					"name": "Task-2/Staging"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -342,7 +572,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"folder": {
-					"name": "Task-2"
+					"name": "Task-2/Prep"
 				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
@@ -446,6 +676,218 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Item_count')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Item_count",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentName as string,",
+						"          categoryName as string,",
+						"          categoryName1 as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          brandName as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(departmentName,",
+						"          categoryName,",
+						"          categoryName1),",
+						"     Total_item = count(categoryName1)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Min_Max_Unit_Price')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Minb_Max_Unit_Price",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentName as string,",
+						"          categoryName as string,",
+						"          categoryName1 as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          brandName as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(departmentName,",
+						"          categoryName,",
+						"          categoryName1),",
+						"     {Minimum Unit Price} = min(minStandardUnitPrice),",
+						"          {Maximum Unit Price} = max(maxStandardUnitPrice)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Reporting_Min_Max_Shipping_days')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DB_cleaned_Scraped_data",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DB_Reporting_Min_Max_Days_To_Ship",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          departmentName as string,",
+						"          categoryName as string,",
+						"          categoryName1 as string,",
+						"          seriesCode as string,",
+						"          seriesName as string,",
+						"          minStandardUnitPrice as integer,",
+						"          maxStandardUnitPrice as integer,",
+						"          brandName as string,",
+						"          minStandardDaysToShip as integer,",
+						"          maxStandardDaysToShip as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source1",
+						"source1 aggregate(groupBy(departmentName,",
+						"          categoryName,",
+						"          categoryName1),",
+						"     {Minimum Days To Ship} = min(minStandardDaysToShip),",
+						"          {Maximum Days To Ship} = max(maxStandardDaysToShip)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     recreate:true,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Trans_User_1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -486,12 +928,14 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task - 1/Reporting"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T04:55:02Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Transaction_User_1')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Trans_User_2')]",
@@ -534,12 +978,14 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task - 1/Reporting"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-29T04:55:03Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Trans_User_2')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_Transaction_User_Join')]",
@@ -583,7 +1029,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task - 1/Prep"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
@@ -633,7 +1079,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task - 1/Prep"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
@@ -683,7 +1129,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task - 1/Prep"
 				},
 				"annotations": [],
 				"lastPublishTime": "2024-08-28T12:43:38Z"
@@ -733,7 +1179,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task-2"
+					"name": "Task-2/Staging"
 				},
 				"annotations": []
 			},
@@ -782,7 +1228,7 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task-2"
+					"name": "Task-2/Prep"
 				},
 				"annotations": []
 			},
@@ -791,170 +1237,39 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_trigger_all_pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Item_count')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
 							"secureInput": false
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"pipeline": {
-								"referenceName": "AT_to_DB_transaction",
-								"type": "PipelineReference"
+							"dataflow": {
+								"referenceName": "DF_Reporting_Item_count",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "AT_to_DB_user",
-								"type": "PipelineReference"
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
 							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline3",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_clean_transaction",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline4",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline3",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_clean_user",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline5",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline4",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_Transaction_User_Join",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline6",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline5",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_Reporting_Trans_User_1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Execute Pipeline7",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Execute Pipeline6",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "PL_Reporting_Trans_User_2",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
+							"traceLevel": "Fine"
 						}
 					}
 				],
@@ -962,47 +1277,61 @@
 					"elapsedTimeMetric": {}
 				},
 				"folder": {
-					"name": "Task - 1"
+					"name": "Task-2/Reporting"
 				},
-				"annotations": [],
-				"lastPublishTime": "2024-08-29T05:20:28Z"
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_clean_transaction')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_clean_user')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_Transaction_User_Join')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_Reporting_Trans_User_1')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_Reporting_Trans_User_2')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Item_count')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/trigger1')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
+			"name": "[concat(parameters('factoryName'), '/PL_Reporting_Min_Max_Unit_Price')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
+				"activities": [
 					{
-						"pipelineReference": {
-							"referenceName": "PL_trigger_all_pipeline",
-							"type": "PipelineReference"
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
 						},
-						"parameters": {}
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Reporting_Min_Max_Unit_Price",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Hour",
-						"interval": 1,
-						"startTime": "2024-08-28T10:42:00",
-						"timeZone": "India Standard Time"
-					}
-				}
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Task-2/Reporting"
+				},
+				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/PL_trigger_all_pipeline')]"
+				"[concat(variables('factoryId'), '/dataflows/DF_Reporting_Min_Max_Unit_Price')]"
 			]
 		}
 	]
